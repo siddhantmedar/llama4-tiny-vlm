@@ -21,6 +21,7 @@ def train(
     model,
     train_loader,
     val_loader,
+    aux_loss_alpha = 0.01,
     optimizer="adamw",
     weight_decay=0.1,
     learning_rate=1e-3,
@@ -77,7 +78,8 @@ def train(
 
             opt.zero_grad()
             y_hat = model(x)
-            loss = loss_fn(y_hat, y)
+            ce_loss = loss_fn(y_hat, y)
+            loss = ce_loss + (aux_loss_alpha * model.aux_loss) # ce loss + aux loss
             loss.backward()
             opt.step()
 
@@ -320,6 +322,7 @@ if __name__ == "__main__":
             model=model,
             train_loader=train_loader,
             val_loader=val_loader,
+            aux_loss_alpha = 0.01,
             optimizer="adamw",
             weight_decay=weight_decay,
             learning_rate=learning_rate,
