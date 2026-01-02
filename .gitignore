@@ -28,3 +28,38 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Model checkpoints (large files)
+checkpoints/
+*/checkpoints/
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# TensorBoard logs
+runs/
+*/runs/
+
+# Training logs
+*.log
+training.log
+
+# Test images
+test_*.jpg
+test_*.png
+
+# Tokenizer files (keep only the with_image_tag version in VLA)
+notebooks/bpe_tokenizer.json
+text_pretraining/tokenizer/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
