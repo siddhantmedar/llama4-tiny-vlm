@@ -29,10 +29,9 @@ wheels/
 *.egg
 MANIFEST
 
-# Model checkpoints (large files)
-checkpoints/
-*/checkpoints/
-*.pt
+# Model checkpoints (intermediate checkpoints ignored, best/last tracked via LFS)
+*/checkpoints/checkpoint_step_*.pt
+*/checkpoints/runs/
 *.pth
 *.bin
 *.safetensors

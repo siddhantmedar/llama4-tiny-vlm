@@ -50,3 +50,52 @@ vlm_warmup_steps = 360      # ~1% of 36k total steps
 
 # Validation
 vlm_val_batches = 500       # 500 * 48 = 24k samples for validation
+
+# ==================== Visual Instruction Tuning (Phase 3) ====================
+# Trains MLP projector (~4.7M) + LLM (~380M), ViT frozen (~86M)
+# Uses LLaVA-Instruct-150K dataset (~150K conversations with COCO images)
+
+# Training hyperparameters (RTX 3090 24GB)
+instruct_batch_size = 12          # ~23GB VRAM usage
+instruct_epochs = 1               # 1 pass usually enough for instruction tuning
+instruct_batches_per_epoch = -1     # -1 = full epoch (dataset downloaded locally)
+instruct_learning_rate = 2e-5     # Lower LR (LLM already pretrained)
+instruct_weight_decay = 0.01
+instruct_max_grad_norm = 1.0
+
+# Data
+instruct_max_seq_len = 512        # Conversations longer than captions (max ~440 tokens)
+
+# Scheduler
+instruct_warmup_steps = 1000      # ~3% of 35k steps, good for stability
+
+# Validation
+instruct_val_batches = 500        # 500 * 4 = 2k samples for validation
+
+# Logging
+instruct_log_interval = 200       # Log every 200 batches
+
+# ==================== DPO Preference Tuning (Phase 4) ====================
+# Direct Preference Optimization using RLAIF-V dataset (83K preference pairs)
+# Trains full model (same as Phase 3) to prefer chosen over rejected responses
+
+# Training hyperparameters (RTX 3090 24GB)
+dpo_batch_size = 4                # Lower due to 2x forward passes (chosen + rejected)
+dpo_epochs = 1                    # 1 epoch usually sufficient
+dpo_batches_per_epoch = -1        # -1 = full epoch
+dpo_learning_rate = 5e-6          # Very low LR for preference tuning
+dpo_weight_decay = 0.01
+dpo_beta = 0.1                    # DPO temperature parameter
+
+# Data
+dpo_max_seq_len = 512
+
+# Scheduler
+dpo_warmup_steps = 100
+
+# Validation
+dpo_val_batches = 200
+
+# Logging
+dpo_log_interval = 50
+dpo_save_interval = 500
